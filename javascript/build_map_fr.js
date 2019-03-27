@@ -90,6 +90,12 @@ function makeMap(error, csd_data, prov_data, csd_map, prov_map) {
         .enter()
         .append("path")
         .attr("d", path)
+        .attr("id", function (d) {
+
+            _.isUndefined(d.properties.CDUID) ? console.log(d.properties.PRNAME) : console.log(d.properties.CDNAME);
+
+            return _.isUndefined(d.properties.CDUID) ? d.properties.PRNAME : d.properties.CDNAME;
+        })
         .style("fill", function (d) {
 
             var temp2 = _.filter(pop_data, function (row, i) {
@@ -98,7 +104,7 @@ function makeMap(error, csd_data, prov_data, csd_map, prov_map) {
             return (_.isEmpty(temp2) || temp2[0].OLMC_fr === "s.o." || prov_bool === 1)? "#f9f9f9" : color(temp2[0].OLMC_fr);
 
         })
-        .on("click", clicked);
+        .on("focus", clicked);
 
 
         d3.select(self.frameElement).style("height", height + "px");

@@ -41,12 +41,6 @@ function makeMap(error, csd_data, prov_data, csd_map, prov_map) {
         active = d3.select(null)
         ;
 
-//		**********Do Not Delete*****
-//		command to export in WGS84 format
-//		$ -proj wgs84 -o format=geojson canada_long.json
-//		**********Do Not Delete*****
-//
-
     var projection = d3.geoConicConformal()
             .parallels([33, 45])
             .rotate([96, -39])
@@ -89,7 +83,12 @@ function makeMap(error, csd_data, prov_data, csd_map, prov_map) {
         .enter()
         .append("path")
         .attr("d", path)
-        .attr("id", function (d) {   debugger; })
+        .attr("id", function (d) {
+
+            _.isUndefined(d.properties.CDUID) ? console.log(d.properties.PRNAME) : console.log(d.properties.CDNAME);
+
+            return _.isUndefined(d.properties.CDUID) ? d.properties.PRNAME : d.properties.CDNAME;
+        })
         .style("fill", function (d) {
 
             var temp2 = _.filter(pop_data, function (row, i) {
@@ -98,7 +97,8 @@ function makeMap(error, csd_data, prov_data, csd_map, prov_map) {
             return (_.isEmpty(temp2) || temp2[0].OLMC_en === "N/A" || prov_bool === 1)? "#f9f9f9" : color(temp2[0].OLMC_en);
 
         })
-        .on("click", clicked);
+        // .attr("tabindex", function (d,i) { return i;  })
+        .on("focus", clicked);
 
 
         d3.select(self.frameElement).style("height", height + "px");
